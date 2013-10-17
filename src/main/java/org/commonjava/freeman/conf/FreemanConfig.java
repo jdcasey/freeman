@@ -25,11 +25,13 @@ public class FreemanConfig
 
     private static final String USER_HOME = System.getProperty( "user.home" );
 
-    public static final File DEFAULT_CONTENT_DIR = new File( USER_HOME, "freeki" );
+    public static final File DEFAULT_CONTENT_BASEDIR = new File( USER_HOME, "freeman" );
 
-    public static final String DEFAULT_BRANDING_SUBPATH = ".branding";
+    public static final String DEFAULT_BRANDING_SUBPATH = "branding";
 
-    public static final String DEFAULT_COMMANDS_SUBPATH = ".commands";
+    public static final String DEFAULT_COMMANDS_SUBPATH = "commands";
+
+    public static final String DEFAULT_STATIC_SUBPATH = "static";
 
     public static final String DEFAULT_LISTEN = "localhost";
 
@@ -44,13 +46,16 @@ public class FreemanConfig
     @Option( name = "-l", aliases = "--listen", usage = "Host or IP address to listen on (default: localhost)" )
     private String listen;
 
-    @Option( name = "-c", aliases = "--content", usage = "Content directory (default: $HOME/freeki)" )
-    private File contentDir;
+    @Option( name = "-c", aliases = "--content", usage = "Content directory (default: $HOME/freeman)" )
+    private File contentBasedir;
 
-    @Option( name = "-b", aliases = "--branding", usage = "Branding content directory (default: $HOME/freeki/.branding)" )
+    @Option( name = "-s", aliases = "--static", usage = "Static content directory (default: $HOME/freeman/static)" )
+    private File staticDir;
+
+    @Option( name = "-b", aliases = "--branding", usage = "Branding content directory (default: $HOME/freeman/branding)" )
     private File brandingDir;
 
-    @Option( name = "-t", aliases = "--templates", usage = "Templates directory (default: $HOME/freeki/.templates)" )
+    @Option( name = "-C", aliases = "--commands", usage = "Commands directory (default: $HOME/freeman/templates)" )
     private File commandsDir;
 
     public FreemanConfig()
@@ -64,24 +69,34 @@ public class FreemanConfig
 
     public FreemanConfig( final File contentDir, final File brandingDir, final File templatesDir )
     {
-        this.contentDir = contentDir;
+        this.contentBasedir = contentDir;
         this.brandingDir = brandingDir;
         this.commandsDir = templatesDir;
     }
 
-    public File getContentDir()
+    public File getContentBasedir()
     {
-        return contentDir == null ? DEFAULT_CONTENT_DIR : contentDir;
+        return contentBasedir == null ? DEFAULT_CONTENT_BASEDIR : contentBasedir;
+    }
+
+    public void setContentBasedir( final File contentBasedir )
+    {
+        this.contentBasedir = contentBasedir;
+    }
+
+    public File getStaticDir()
+    {
+        return staticDir == null ? new File( getContentBasedir(), DEFAULT_STATIC_SUBPATH ) : staticDir;
     }
 
     public void setContentDir( final File contentDir )
     {
-        this.contentDir = contentDir;
+        this.contentBasedir = contentDir;
     }
 
     public File getBrandingDir()
     {
-        return brandingDir == null ? new File( getContentDir(), DEFAULT_BRANDING_SUBPATH ) : brandingDir;
+        return brandingDir == null ? new File( getContentBasedir(), DEFAULT_BRANDING_SUBPATH ) : brandingDir;
     }
 
     public void setBrandingDir( final File brandingDir )
@@ -91,7 +106,7 @@ public class FreemanConfig
 
     public File getCommandsDir()
     {
-        return commandsDir == null ? new File( getContentDir(), DEFAULT_COMMANDS_SUBPATH ) : commandsDir;
+        return commandsDir == null ? new File( getContentBasedir(), DEFAULT_COMMANDS_SUBPATH ) : commandsDir;
     }
 
     public void setCommandsDir( final File commandsDir )
@@ -141,9 +156,9 @@ public class FreemanConfig
             this.brandingDir = overrides.brandingDir;
         }
 
-        if ( overrides.contentDir != null )
+        if ( overrides.contentBasedir != null )
         {
-            this.contentDir = overrides.contentDir;
+            this.contentBasedir = overrides.contentBasedir;
         }
 
         if ( overrides.listen != null )

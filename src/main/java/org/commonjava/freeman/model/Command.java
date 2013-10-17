@@ -23,14 +23,14 @@ public class Command
 
     private final String label;
 
-    private final File html;
+    private final File inHtml;
 
     private final File script;
 
-    public Command( final String label, final File html, final File script )
+    public Command( final String label, final File inHtml, final File script )
     {
         this.label = label;
-        this.html = html;
+        this.inHtml = inHtml;
         this.script = script;
     }
 
@@ -39,9 +39,9 @@ public class Command
         return label;
     }
 
-    public File getHtml()
+    public File getInHtml()
     {
-        return html;
+        return inHtml;
     }
 
     public File getScript()

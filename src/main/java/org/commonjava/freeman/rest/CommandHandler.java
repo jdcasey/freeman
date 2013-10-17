@@ -29,6 +29,7 @@ import org.commonjava.freeman.data.CommandException;
 import org.commonjava.freeman.infra.render.RenderingEngine;
 import org.commonjava.freeman.infra.render.RenderingException;
 import org.commonjava.freeman.util.ContentType;
+import org.commonjava.util.logging.Logger;
 import org.commonjava.vertx.vabr.Method;
 import org.commonjava.vertx.vabr.RouteHandler;
 import org.commonjava.vertx.vabr.anno.Route;
@@ -41,7 +42,7 @@ public class CommandHandler
     implements RouteHandler
 {
 
-    //    private final Logger logger = new Logger( getClass() );
+    private final Logger logger = new Logger( getClass() );
 
     private final CommandController controller;
 
@@ -62,6 +63,7 @@ public class CommandHandler
         throws Exception
     {
         final List<String> labels = controller.getCommandLabels();
+        logger.info( "Rendering %d commands:\n\n  - %s", labels.size(), join( labels, "\n  - " ) );
 
         final String json = render.render( new Listing<String>( labels ), ContentType.APPLICATION_JSON, Collections.<String, String> emptyMap() );
 
@@ -84,7 +86,7 @@ public class CommandHandler
                                    .get( PathParameter.command.name() );
 
         //        logger.info( "Loading HTML form for template: '%s'\nURI: '%s'", template, req.absoluteURI() );
-        final File html = controller.getCommandHtml( template );
+        final File html = controller.getCommandForm( template );
         if ( !html.exists() )
         {
             req.response()

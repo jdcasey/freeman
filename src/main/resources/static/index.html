@@ -1,0 +1,81 @@
+<html>
+<!-- 
+Copyright (C) 2013 John Casey.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+  <head>
+    <title>Freeman</title>
+    <link rel="stylesheet" href="/css/jquery-ui.css"/>
+    <link rel="stylesheet" href="/css/main.css"/>
+    <link rel="stylesheet" href="/css/branding.css"/>
+  
+    <script type="text/javascript" src="/js/jquery.js"></script>
+    <script type="text/javascript" src="/js/jquery-ui.js"></script>
+    <script type="text/javascript" src="/js/handlebars.js"></script>
+    <script type="text/javascript" src="/js/main.js"></script>
+    <script>
+        $(document).ready(function(){
+          init();
+        });
+    </script>
+    <script type="text/javascript" src="/js/branding.js"></script>
+  </head>
+  <body>
+    <div id="branding-header">
+      <span class="freeman-plug">Look, another system managed by <a target="_new" href="https://github.com/jdcasey/freeman">Freeman</a>!</span>
+    </div>
+
+    <div id="main">
+      <div id="command-listing">
+        <div id="command-listing-title">Available Commands:</div>
+        <ul>
+        </ul>
+      </div>
+      <div id="command-content-pane">
+        <iframe id="command-pane">
+        </iframe>
+        <div id="select-command-pane">
+          <p>Select a command to run.</p>
+        </div>
+      </div>
+    </div>
+    <div id="hidden-panes" style="display: none;">
+      <div id="command-item-template">
+        <li><a class="command-link" command="{{label}}" href="#">{{label}}</a></li>
+      </div>
+      <div id="command-form-holder">
+        <form>
+          <div class="command-form-content">
+          </div>
+          <div class="command-buttonbar">
+            <button class="command-execute">Execute</button>
+            <button class="command-cancel">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <footer>
+      <div class="branding-help">
+        <span style="font-size: 8pt; float: left;">
+          <b>NOTE:</b> You can turn these off by editing \$HOME/freeman/static/css/branding.css and adding:
+          <pre>
+          .branding-help, .freeman-plug{display:none;}
+          </pre>
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>

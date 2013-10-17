@@ -38,7 +38,7 @@ public class StaticContentHandler
 
     public StaticContentHandler( final FreemanConfig mainConf )
     {
-        this.staticBasedir = mainConf.getContentDir();
+        this.staticBasedir = mainConf.getStaticDir();
     }
 
     @Override

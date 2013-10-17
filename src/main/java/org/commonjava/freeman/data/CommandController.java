@@ -26,15 +26,14 @@ import java.util.Map;
 import org.commonjava.freeman.conf.FreemanConfig;
 import org.commonjava.freeman.model.Command;
 import org.commonjava.freeman.util.JRubyLauncher;
+import org.commonjava.util.logging.Logger;
 
 public class CommandController
 {
 
-    //    private final Logger logger = new Logger( getClass() );
+    private final Logger logger = new Logger( getClass() );
 
     private final FreemanConfig conf;
-
-    private final Map<String, Command> commands = new HashMap<>();
 
     private final JRubyLauncher launcher;
 
@@ -42,12 +41,14 @@ public class CommandController
     {
         this.conf = conf;
         this.launcher = launcher;
-        loadCommands();
     }
 
-    private void loadCommands()
+    private Map<String, Command> getCommands()
     {
+        final Map<String, Command> commands = new HashMap<>();
+
         final File dir = conf.getCommandsDir();
+        logger.info( "Checking for commands in: %s", dir );
         if ( dir.isDirectory() )
         {
             final File[] files = dir.listFiles();
@@ -62,28 +63,31 @@ public class CommandController
                 if ( file.isDirectory() )
                 {
                     final String label = file.getName();
-                    final File html = new File( file, label + ".html" );
-                    final File script = new File( file, label + ".groovy" );
-                    commands.put( label, new Command( label, html, script ) );
+                    final File inHtml = new File( file, label + ".form.html" );
+                    final File script = new File( file, label + ".rb" );
+                    logger.info( "Adding command %s", label );
+                    commands.put( label, new Command( label, inHtml, script ) );
                 }
             }
         }
+
+        return commands;
     }
 
     public List<String> getCommandLabels()
     {
-        final List<String> labels = new ArrayList<>( commands.keySet() );
+        final List<String> labels = new ArrayList<>( getCommands().keySet() );
         Collections.sort( labels );
 
         return labels;
     }
 
-    public File getCommandHtml( final String label )
+    public File getCommandForm( final String label )
     {
-        final Command command = commands.get( label );
+        final Command command = getCommands().get( label );
         if ( command != null )
         {
-            return command.getHtml();
+            return command.getInHtml();
         }
 
         return null;
@@ -92,7 +96,7 @@ public class CommandController
     public Map<String, Object> runCommandAction( final String label, final Map<String, String> params )
         throws CommandException
     {
-        final Command command = commands.get( label );
+        final Command command = getCommands().get( label );
         if ( command == null )
         {
             throw new CommandException( "Cannot find command: '%s'", label );
